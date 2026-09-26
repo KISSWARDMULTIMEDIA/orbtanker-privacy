@@ -44,6 +44,22 @@ Note that `index.html` carries a "Last updated" date in its header - bump it whe
 - Styling is inline so the page cannot break if a CDN is unreachable.
 - The dark navy theme matches the game's own palette.
 
+## Important: no AdMob consent message is configured
+
+This app intentionally has **no** European regulations (consent) message configured in AdMob.
+That is a deliberate choice, not an oversight.
+
+- No consent form is ever displayed, in any region.
+- Advertising in the EEA, the UK and Switzerland is therefore limited to non-personalised
+  ads, for every player. This is the same outcome Google applies automatically when no
+  certified consent management platform is present.
+- Players outside those regions are unaffected; players confirmed to be 13 or older there may
+  still receive personalised advertising.
+
+**Do not add a European message without also implementing a privacy-options entry point.**
+Google requires one whenever a consent message is configured, and section 3 of the policy
+would stop being accurate.
+
 ## Contact
 
 David Kissward - kisswarddavid2@gmail.com
