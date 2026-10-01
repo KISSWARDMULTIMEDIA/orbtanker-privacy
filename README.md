@@ -1,22 +1,58 @@
-# Orb Tanker - Privacy Policy
+# Orb Tanker - Privacy Policy and app-ads.txt
 
-This repository hosts the public privacy policy page for the **Orb Tanker** Android game.
+This repository hosts the public web properties for the **Orb Tanker** Android game:
 
-The policy is served via GitHub Pages at:
+| File | Purpose |
+| --- | --- |
+| `index.html` | The privacy policy page. |
+| `app-ads.txt` | Declares Google AdMob as the only authorised seller of this app's ad inventory. |
 
-**https://KISSWARDMULTIMEDIA.github.io/orbtanker-privacy/**
+Both are served via GitHub Pages at:
 
-The URL above is entered in:
+- Policy: **https://KISSWARDMULTIMEDIA.github.io/orbtanker-privacy/**
+- Authorised sellers: **https://KISSWARDMULTIMEDIA.github.io/orbtanker-privacy/app-ads.txt**
 
-1. **Google Play Console** - App content page (Privacy policy field). Play requires a publicly reachable policy URL for every app.
-2. **Inside the app** - Settings > Privacy Policy screen, which carries the same wording.
+## Where these URLs are used
+
+1. **Google Play Console** - App content page, **Privacy policy** field. Play requires a publicly reachable policy URL for every app.
+2. **Google Play Console** - Store listing, **developer website** field. This is the URL AdMob reads to locate `app-ads.txt`; without it there is nothing for the crawler to fetch.
+3. **Inside the app** - Settings > Privacy Policy screen, which carries the same wording.
+
+## app-ads.txt
+
+Content is exactly one line:
+
+```text
+google.com, pub-2032400037497626, DIRECT, f08c47fec0942fa0
+```
+
+- `pub-2032400037497626` is the AdMob publisher ID and matches the app ID `ca-app-pub-2032400037497626~2005109511` used in `AndroidManifest.xml`.
+- AdMob is the only ad network in the app, so a single record is correct. If another network is ever added, append its own record rather than editing this one.
+- Format follows the IAB Tech Lab Authorized Sellers for Apps spec: plain ASCII, no BOM, LF line endings, trailing newline.
+- This file is not part of the app bundle. It must stay reachable over **both** HTTP and HTTPS, return 200, and must not be blocked by `robots.txt`.
+
+### Verifying after a push
+
+```powershell
+$u = "https://KISSWARDMULTIMEDIA.github.io/orbtanker-privacy/app-ads.txt"
+(Invoke-WebRequest $u -UseBasicParsing).Content
+curl.exe -sI $u
+```
+
+Expect the single line above and `200 OK`.
+
+### AdMob status
+
+AdMob crawls the developer website from the store listing. After the file is live and the Play listing is set, allow **at least 24 hours** before expecting the status to update. If AdMob reports the file as hosted on an unsupported location, its app-ads.txt status page shows the exact URL it tried - use that to confirm the Play listing matches this repository's Pages URL character for character.
+
+Advertising continues to serve normally if `app-ads.txt` is missing; it exists to stop other parties selling counterfeit copies of this app's inventory.
 
 ## Publishing on GitHub Pages
 
 The page is served from the repository root (`index.html`), so the root URL works.
 
-- Create this repository (public) under the KISSWARDMULTIMEDIA account, with no README or licence file.
-- Push `index.html` to the repository root (and this README).
+- This repository is public under the KISSWARDMULTIMEDIA account.
+- Push `index.html`, `app-ads.txt` and this README to the repository root.
 - Enable Pages:
   - Settings > Pages > Build and deployment
   - Source: Deploy from a branch
@@ -27,7 +63,7 @@ To push local changes:
 
 ```powershell
 cd "C:\Users\DAVID\Desktop\orbtanker-privacy"
-git add index.html
+git add index.html app-ads.txt README.md
 git commit -m "Update privacy policy"
 git push
 ```
@@ -37,6 +73,8 @@ git push
 When the policy changes, update `index.html` and push. GitHub Pages updates automatically.
 
 Note that `index.html` carries a "Last updated" date in its header - bump it whenever the wording changes.
+
+When the AdMob publisher ID changes, update `app-ads.txt` to match. A mismatch there will fail verification even though the file is served correctly.
 
 ## Design notes
 
